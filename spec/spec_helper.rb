@@ -35,6 +35,7 @@ require 'spree_sam/factories'
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
+  config.include Devise::TestHelpers, type: :controller
 
   # Infer an example group's spec type from the file location.
   config.infer_spec_type_from_file_location!
@@ -90,4 +91,8 @@ RSpec.configure do |config|
 
   config.fail_fast = ENV['FAIL_FAST'] || false
   config.order = "random"
+
+  config.before do
+    Spree::Api::Config[:requires_authentication] = true
+  end
 end
