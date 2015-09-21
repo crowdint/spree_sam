@@ -5,6 +5,11 @@ Spree::Core::Engine.routes.draw do
 
       resources :stats, only: [:index]
       resources :shipping_categories, only: [:index, :show]
+      resources :promotions, only: [:index, :show, :create, :update] do
+        collection do
+          get 'available'
+        end
+      end
 
     end
   end
