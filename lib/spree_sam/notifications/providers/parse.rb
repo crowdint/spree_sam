@@ -1,11 +1,9 @@
-require "httparty"
+require "spree_sam/notifications/providers/base"
 
 module SpreeSam
   module Notifications
     module Providers
-      class Parse
-
-        include HTTParty
+      class Parse < Base
 
         base_uri "https://api.parse.com"
 
@@ -14,12 +12,22 @@ module SpreeSam
                 "Content-Type"           => "application/json"
 
 
-        def initialize(payload)
-          @payload = payload.to_json
+        def push
+          build_payload!
+          self.class.post "/1/push", body: payload.to_json
         end
 
-        def push
-          self.class.post "/1/push", body: @payload
+        private
+
+        def build_payload!
+          @payload = {
+            data: {
+              alert: @message,
+              info: @raw,
+            },
+            badge: @options[:badge] || "Increment",# Counter for pending notifications
+            sound: @options[:sound] || "default"
+          }
         end
 
       end

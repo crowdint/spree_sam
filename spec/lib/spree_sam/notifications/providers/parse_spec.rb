@@ -3,23 +3,40 @@ require "spec_helper"
 describe SpreeSam::Notifications::Providers::Parse do
 
 
-  describe ".new" do
-    subject { SpreeSam::Notifications::Providers::Parse }
-    let(:payload) { { data: "test" } }
+  describe "#build_payload" do
 
-    it "creates a new instance initialized with given payload in JSON" do
-      client = subject.new(payload)
-      expect(client.instance_variable_get("@payload")).to eq(payload.to_json)
+    subject { SpreeSam::Notifications::Providers::Parse }
+
+    before do
+      @client = subject.new("Important", {something: "important" }, {sound: "chime"})
+      @client.send :build_payload!
+    end
+
+    it "uses @message as notification alert message" do
+      expect(@client.payload[:data][:alert]) .to eq("Important")
+    end
+
+    it "uses @raw as notification raw info" do
+      expect(@client.payload[:data][:info]) .to eq({something: "important"})
+    end
+
+    it "uses the badge provided in options or fallbacks to 'Increment'" do
+      expect(@client.payload[:badge]).to eq("Increment")
+    end
+
+    it "uses the badge provided in options or fallbacks to 'default'" do
+      expect(@client.payload[:sound]).to eq("chime")
     end
   end
 
   describe "#push" do
     subject { SpreeSam::Notifications::Providers::Parse }
 
-    let(:payload) { { data: "test" } }
-    let(:client) { subject.new(payload) }
+    let(:client) { subject.new("Important") }
+    let(:payload) { client.send :build_payload! ; client.payload }
 
-    it "creates an http post request to parse push notifications API  with given payload" do
+
+    it "triggers an http post request to parse API to create a push notification" do
       expect(subject).to receive(:post).with("/1/push", body: payload.to_json )
       client.push
     end
