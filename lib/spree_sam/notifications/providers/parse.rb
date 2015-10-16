@@ -11,6 +11,11 @@ module SpreeSam
                 "X-Parse-REST-API-Key"   => ENV["PARSE_API_KEY"],
                 "Content-Type"           => "application/json"
 
+        def initialize(message, data = {}, options = {})
+          super
+          @options[:channels] ||= []
+        end
+
 
         def push
           build_payload!
@@ -19,8 +24,15 @@ module SpreeSam
 
         private
 
+        def channels
+          @options[:channels].map do |channel|
+            SpreeSam::Preferences.notifications_parse_channels[channel]
+          end.compact
+        end
+
         def build_payload!
           @payload = {
+            channels: channels,
             data: {
               alert: @message,
               info: @raw,
