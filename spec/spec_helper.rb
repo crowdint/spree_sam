@@ -10,6 +10,9 @@ SimpleCov.start do
   add_group 'Libraries', 'lib'
 end
 
+require "coveralls"
+Coveralls.wear!
+
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
 
