@@ -10,20 +10,13 @@ Spree::Payment.class_eval do
 
   def send_risk_notification
     SpreeSam::Notifications.build(:parse,
-      channels: (ENV["PARSE_CHANNELS"] || []).split(","),
-      data: {
-        alert: "Risky Order",
-        info: {
-          order_id: order.id,
-          details: {
-            reason: "payment rejected",
-            date: Time.now
-          }
-        }
-      },
-      badge: "Increment",
-      sound: "default"
-    ).push
+                                  "Risky Order",
+                                  order_id: order.id,
+                                  details: {
+                                    reason: "payment rejected",
+                                    date: Time.now
+                                  }
+                                 ).push
   end
 
 end

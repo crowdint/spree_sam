@@ -71,29 +71,21 @@ describe Spree::Payment do
 
   end
 
-  describe "send_risky_notification" do
+  describe "send_risk_notification" do
     let(:notification) { double(:notification) }
 
     subject { FactoryGirl.build :payment_with_risky_avs_code }
 
     it "builds and pushes a payment rejected notification with parse provider and order id" do
       expect(SpreeSam::Notifications).to receive(:build)
-        .with(:parse,  hash_including(channels: instance_of(Array),
-                                      data: {
-                                        alert: "Risky Order",
-                                        info: {
-                                          order_id: subject.order.id,
-                                          details: {
-                                            reason: "payment rejected",
-                                            date: instance_of(Time)
-                                          }
-                                        }
-                                      },
-                                      badge: "Increment",
-                                      sound: "default"
-                                    )
-            )
-          .and_return(notification)
+        .with(:parse, "Risky Order",  hash_including(
+        order_id: subject.order.id,
+        details: {
+          reason: "payment rejected",
+          date: instance_of(Time)
+        }
+        ))
+        .and_return(notification)
 
       expect(notification).to receive(:push) {}
       subject.send :send_risk_notification
