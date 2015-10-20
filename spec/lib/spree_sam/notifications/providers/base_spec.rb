@@ -6,13 +6,17 @@ describe SpreeSam::Notifications::Providers::Base do
 
     subject { SpreeSam::Notifications::Providers::Base }
 
-    it "assigns message, raw data and options to instance variables" do
-      provider = subject.new "Something happened",
-                             {something: "useful"},
-                             {sound: "default"}
+    it "assigns title, body and channels to instance variables" do
+      provider = subject.new title: "Something happened",
+                             body: {
+                               message: "useful"
+                             },
+                             options: {
+                               sound: "default"
+                             }
 
-      expect(provider.instance_variable_get('@message')).to eq("Something happened")
-      expect(provider.instance_variable_get('@raw')).to eq({something: "useful"})
+      expect(provider.instance_variable_get('@title')).to eq("Something happened")
+      expect(provider.instance_variable_get('@body')).to eq({message: "useful"})
       expect(provider.instance_variable_get('@options')).to eq({sound: "default"})
     end
 

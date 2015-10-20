@@ -1,5 +1,11 @@
 module SpreeSam
   class Configuration < Spree::Preferences::Configuration
-    preference :notifications_parse_channels, :hash, default: {}
+
+    preference :notification_channels, :hash, default: {
+      orders: {
+        risky: []
+      }
+    }
+
   end
 end

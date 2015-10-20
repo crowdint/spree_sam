@@ -9,10 +9,11 @@ module SpreeSam
 
         include HTTParty
 
-        def initialize(message, raw = {}, options = {})
-          @message = message
-          @raw = raw
-          @options = options
+        def initialize(payload = {})
+          @title    = payload[:title]
+          @body     = payload[:body]
+          @channels = payload[:channels] || []
+          @options  = payload[:options]  || {}
         end
 
         # Implement in subclasses
