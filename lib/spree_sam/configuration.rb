@@ -7,5 +7,7 @@ module SpreeSam
       }
     }
 
+    preference :notification_provider, :string, default: "parse"
+
   end
 end

@@ -45,10 +45,9 @@ describe Spree::Order do
       allow(notification).to receive :push
     end
 
-    it "builds and pushes a payment rejected notification with parse provider and order id" do
+    it "builds and pushes a risk notification with order id" do
       expect(SpreeSam::Notifications).to receive(:build)
-        .with(:parse,
-              hash_including(
+        .with(hash_including(
                 title: "Risky Order",
                 body: {
                   order_id: subject.id,
@@ -79,7 +78,7 @@ describe Spree::Order do
 
       it "uses defined channels when building the notification" do
         expect(SpreeSam::Notifications).to receive(:build)
-          .with(:parse, hash_including(:title, :body, channels: ["test"]))
+          .with(hash_including(:title, :body, channels: ["test"]))
           .and_return notification
           subject.send :send_risk_notification
       end

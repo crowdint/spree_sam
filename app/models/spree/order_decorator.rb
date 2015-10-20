@@ -28,8 +28,7 @@ Spree::Order.class_eval do
   private
 
   def send_risk_notification
-    SpreeSam::Notifications.build(:parse,
-                                  title: "Risky Order",
+    SpreeSam::Notifications.build(title: "Risky Order",
                                   body: {
                                     order_id: id,
                                     details: {
