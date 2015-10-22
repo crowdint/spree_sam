@@ -21,4 +21,23 @@ Spree::Order.class_eval do
         # .where.not(email: nil)
   }
 
+  state_machine do
+    after_transition to: :complete, do: :send_risk_notification, if: :is_risky?
+  end
+
+  private
+
+  def send_risk_notification
+    SpreeSam::Notifications.build(title: "Risky Order",
+                                  body: {
+                                    order_id: id,
+                                    details: {
+                                      reason: "payment rejected",
+                                      date: Time.now
+                                    }
+                                  },
+                                  channels: SpreeSam::Preferences.notification_channels[:orders][:risky]
+                                 ).push
+  end
+
 end

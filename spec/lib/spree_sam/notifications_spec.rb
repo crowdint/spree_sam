@@ -6,9 +6,17 @@ describe SpreeSam::Notifications do
 
     subject { SpreeSam::Notifications }
 
-    it "creates an instance of given notification provider" do
-      SpreeSam::Notifications::PROVIDERS.each do |provider, class_name|
-        expect(subject.build(provider, {})).to be_an_instance_of class_name
+    SpreeSam::Notifications::PROVIDERS.each do |provider, class_name|
+      it "creates an instance of configured notification provider" do
+        SpreeSam::Preferences.notification_provider = provider
+        expect(subject.build({})).to be_an_instance_of class_name
+      end
+    end
+
+    context "default notification provider" do
+      it "is parse" do
+        expect(SpreeSam::Notifications::Providers::Parse).to receive :new
+        subject.build({})
       end
     end
   end
