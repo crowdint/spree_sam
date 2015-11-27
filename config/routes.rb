@@ -15,6 +15,11 @@ Spree::Core::Engine.routes.draw do
           get 'available'
         end
       end
+      resources :products do
+        member do
+          get :stock_items
+        end
+      end
 
     end
   end
